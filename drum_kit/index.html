@@ -1,44 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Js Drum Kit</title>
-	<link rel="stylesheet" href="style.css">
-</head>
-<body>
-	<div class="keys">
-		<div class="key">
-			<kbd>A</kbd>
-			<span class="sound"></span>
+	<head>
+		<meta charset="UTF-8">
+		<title>Js Drum Kit</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div class="keys">
+			<div data-key="65" class="key">
+				<kbd>A</kbd>
+				<span class="sound">boom</span>
+			</div>
+			<div data-key="83" class="key">
+				<kbd>S</kbd>
+				<span class="sound">clap</span>
+			</div>
+			<div data-key="68" class="key">
+				<kbd>D</kbd>
+				<span class="sound">hihat</span>
+			</div>
+			<div data-key="70" class="key">
+				<kbd>F</kbd>
+				<span class="sound">kick</span>
+			</div>
+			<div data-key="74" class="key">
+				<kbd>J</kbd>
+				<span class="sound">openhat</span>
+			</div>
+			<div data-key="75" class="key">
+				<kbd>K</kbd>
+				<span class="sound">ride</span>
+			</div>
+			<div data-key="76" class="key">
+				<kbd>L</kbd>
+				<span class="sound">snare</span>
+			</div>
+			<div data-key="186" class="key">
+				<kbd>;</kbd>
+				<span class="sound">tink</span>
+			</div>
 		</div>
-		<div class="key">
-			<kbd>S</kbd>
-			<span class="sound"></span>
-		</div>
-		<div class="key">
-			<kbd>D</kbd>
-			<span class="sound"></span>
-		</div>
-		<div class="key">
-			<kbd>F</kbd>
-			<span class="sound"></span>
-		</div>
-		<div class="key">
-			<kbd>J</kbd>
-			<span class="sound"></span>
-		</div>
-		<div class="key">
-			<kbd>K</kbd>
-			<span class="sound"></span>
-		</div>
-		<div class="key">
-			<kbd>L</kbd>
-			<span class="sound"></span>
-		</div>
-		<div class="key">
-			<kbd>;</kbd>
-			<span class="sound"></span>
-		</div>
-	</div>
-</body>
+	</body>
+	<script type="text/javascript">
+		const pressedDiv = document.getElementsByClassName('key');
+for(var i = 0; i < pressedDiv.length; i++) {
+	pressedDiv[i].addEventListener("mouseover", function (el) {
+		var divEl = el.target;
+		if (!divEl.classList.contains("pressed")){
+			divEl.classList.add("pressed");
+		}
+		playSound (el.target);
+	});
+	pressedDiv[i].addEventListener("click", function (el) {
+		playSound (el.target);
+	});
+	pressedDiv[i].addEventListener("mouseout", function (el) {
+		var divEl = el.target;
+		if (divEl.classList.contains("pressed")){
+			divEl.classList.remove("pressed");
+		}
+	});
+}
+window.addEventListener("keydown", function (event) {
+	if(event.defaultPrevented) {
+		return;
+	}
+	var keyDiv = getTheCorrectDiv(event.keyCode)
+	if(keyDiv){
+		addClassPressed (keyDiv);
+		playSound (keyDiv);
+		removeClassePressed (keyDiv);
+	}
+	else {
+		return;
+	}
+	event.preventDefault;
+}, true);
+
+function getTheCorrectDiv(keyCode) {
+	return document.querySelector(`.key[data-key='${keyCode}']`)
+}
+
+function addClassPressed (keyDiv) {
+	console.log(this);
+	keyDiv.classList.add("pressed");
+}
+
+function removeClassePressed (keyDiv) {
+	window.addEventListener("keyup", function () {
+		keyDiv.classList.remove("pressed");
+	})
+}
+
+function playSound (keyDiv) {
+	var soundName = keyDiv.children[1].innerHTML;
+	var audio = new Audio('./sounds/'+soundName+'.wav');
+	audio.play();
+}
+	</script>
 </html>
